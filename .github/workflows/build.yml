@@ -32,25 +32,12 @@ jobs:
     - name: Build Application (Release)
       run: dotnet build src/OfficeTabs.csproj --configuration Release --no-restore
 
-    - name: Publish Self-Contained Binary
+    - name: Publish Binaries
       run: dotnet publish src/OfficeTabs.csproj -c Release -r win-x64 --self-contained false -o ./publish
 
-    - name: Install WiX Toolset, Accept EULA and Add Extensions
+    - name: Compile Installer (Setup.exe) using Inno Setup
       run: |
-        dotnet tool install --global wix
-        wix eula accept wix7
-        wix extension add -g WixToolset.UI.wixext
-        wix extension add -g WixToolset.BootstrapperApplications.wixext
-      shell: pwsh
-
-    - name: Compile Installer (MSI)
-      run: |
-        wix build -ext WixToolset.UI.wixext -out ./publish/OfficeTabsSetup.msi ./installer/Product.wxs
-      shell: pwsh
-
-    - name: Compile Bootstrapper (Setup.exe)
-      run: |
-        wix build -ext WixToolset.BootstrapperApplications.wixext -out ./publish/Setup.exe ./installer/Bundle.wxs
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ./installer/setup.iss
       shell: pwsh
 
     - name: Upload Build Artifacts
