@@ -1,25 +1,13 @@
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <Package Name="Office Tabs Workspace" Language="1037" Version="1.0.0.0" Publisher="OfficeTabs Dev" UpgradeCode="a9bc4672-9ffb-42e8-936d-1bf27de74bc1" InstallerVersion="500">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <Bundle Name="Office Tabs Workspace" Manufacturer="OfficeTabs Dev" Version="1.0.0" UpgradeCode="68df7e59-00ef-4f27-99bc-359521ee0be9">
     
-    <MajorUpgrade DowngradeErrorMessage="גרסה חדשה יותר מותקנת כבר על המחשב." />
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication LicenseUrl="https://opensource.org/licenses/MIT" Theme="hyperlinkLicense" />
+    </BootstrapperApplication>
 
-    <MediaTemplate EmbedCab="yes" />
-
-    <StandardDirectory Id="LocalAppDataFolder">
-      <Directory Id="INSTALLFOLDER" Name="OfficeTabs" />
-    </StandardDirectory>
-
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="MainExecutable" Guid="32cbcf11-9a74-4bda-a89c-5120d0f411ba">
-        <File Id="OfficeTabsExe" Source="../publish/OfficeTabs.exe" KeyPath="yes" />
-        
-        <!-- רישום הפעלה אוטומטית ברמת הרג'יסטרי של המשתמש -->
-        <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run" Name="OfficeTabs" Type="string" Value="&quot;[#OfficeTabsExe]&quot;" />
-      </Component>
-    </ComponentGroup>
-
-    <Feature Id="ProductFeature" Title="OfficeTabs Installation" Level="1">
-      <ComponentGroupRef Id="ProductComponents" />
-    </Feature>
-  </Package>
+    <Chain>
+      <!-- קישור חבילת ה-MSI שנוצרה בשלב הקודם -->
+      <MsiPackage SourceFile="publish/OfficeTabsSetup.msi" Vital="yes" />
+    </Chain>
+  </Bundle>
 </Wix>
