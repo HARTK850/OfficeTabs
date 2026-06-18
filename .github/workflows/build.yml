@@ -32,8 +32,11 @@ jobs:
     - name: Publish Self-Contained Binary
       run: dotnet publish src/OfficeTabs.csproj -c Release -r win-x64 --self-contained false -o ./publish
 
-    - name: Install WiX Toolset (for MSI generation)
-      run: dotnet tool install --global wix
+    - name: Install WiX Toolset and UI Extension
+      run: |
+        dotnet tool install --global wix
+        wix extension add -g WixToolset.UI.wixext
+      shell: pwsh
 
     - name: Compile Installer (MSI)
       run: |
